@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use FDP-1, please cite the specification using these metadata."
+title: "FDP-1: Food Data Provenance Declaration"
+abstract: >-
+  FDP-1 is a minimal, RFC-style specification for declaring the provenance of a
+  nutrient value (seven fields, including a coded nutrient identity) and the
+  validation status of any score computed from such values (five fields, including
+  a weakest-link provenance rule). It does not score food; it wraps any existing
+  scoring system without modification. Archived with a dependency-free reference
+  validator and a worked example. Status: Draft / Request for Comments.
+type: software
+authors:
+  - family-names: Murff
+    given-names: Paul
+    affiliation: "Morf Engineering"
+version: "0.1.0"
+date-released: "2026-07-26"
+license: Apache-2.0
+repository-code: "https://github.com/murffious/fdp-1"
+keywords:
+  - food data provenance
+  - FDP-1
+  - specification
+  - standard
+  - nutrition
+  - provenance
+  - reproducibility
+# doi: added after the first tagged GitHub release archives to Zenodo (the
+# GitHub–Zenodo integration mints the concept DOI on publish; do not pre-fill).
