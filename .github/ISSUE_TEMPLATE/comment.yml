@@ -1,0 +1,28 @@
+name: Comment on FDP-1 (RFC)
+description: Report where the spec or validator did something you didn't expect.
+title: "[§?] "
+labels: ["rfc-comment"]
+body:
+  - type: input
+    id: section
+    attributes:
+      label: Which section?
+      description: The FDP-1 section this concerns — e.g. §2, §3.1, §4, §6.
+      placeholder: "§3.1"
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What you tried
+      description: The declaration, command, or reading. Paste the relevant JSON if you ran the validator.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected — and what happened instead
+      placeholder: "I expected it to conform / grade B; it reported …"
+    validations:
+      required: true

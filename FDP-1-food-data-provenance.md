@@ -31,7 +31,7 @@ Every nutrient value SHALL declare seven fields.
 
 | Field | Type | Notes |
 |---|---|---|
-| `nutrient_ref` | CURIE | Food-component identity, `prefix:id`. Canonical `cdno` (e.g. `cdno:0200157` = iron); `chebi` / `fdc.nutrient` / `fdc.nbr` / `infoods` also accepted. See below. |
+| `nutrient_ref` | CURIE | Food-component identity, `prefix:id`. Canonical `cdno` (e.g. `cdno:0200651` = dietary iron); `chebi` / `fdc.nutrient` / `fdc.nbr` / `infoods` also accepted. See below. |
 | `value` | number \| `OPEN` \| `NONE` | See §4 |
 | `unit` | UCUM string | e.g. `mg`, `g`, `kcal` |
 | `source` | enum | `analytical` \| `label` \| `calculated` \| `imputed` \| `literature` \| `OPEN` |
@@ -39,7 +39,7 @@ Every nutrient value SHALL declare seven fields.
 | `method` | string \| `OPEN` \| `NONE` | Analytical method where applicable: `aoac:2011.25`, `aoac:991.43`. `NONE` when the value was not measured (see §4) |
 | `retrieved` | ISO 8601 date | When the value was obtained from `source_ref` |
 
-**`nutrient_ref` names the nutrient; `source_ref` names the source** — *which* nutrient versus *where* the number came from; a value is unreadable in isolation without the first. `nutrient_ref` is a CURIE (`prefix:id`). Its **canonical** namespace is **`cdno`**, the OBO Compositional Dietary Nutrition Ontology — a food-composition (analyte) vocabulary grounded in ChEBI, resolvable at `purl.obolibrary.org/obo/CDNO_{id}`, and already carrying cross-references to the systems real data is keyed on. A producer SHOULD give the CDNO analyte term (e.g. `cdno:0200157`, iron) and MAY additionally give an accepted alternate key — `chebi`, `fdc.nutrient` (USDA FDC internal nutrient id, e.g. `1089`), `fdc.nbr` (USDA legacy nutrient number, e.g. `303`), or `infoods` (FAO/INFOODS tagname, e.g. `FE`) — which a consumer resolves to CDNO through CDNO's published `hasDbXref` mappings. **Distinguish `fdc.nutrient` from `fdc.nbr`:** FoodData Central carries two nutrient identifier systems (internal id `1089` and legacy number `303` both denote iron), and a bare `fdc:` is ambiguous.
+**`nutrient_ref` names the nutrient; `source_ref` names the source** — *which* nutrient versus *where* the number came from; a value is unreadable in isolation without the first. `nutrient_ref` is a CURIE (`prefix:id`). Its **canonical** namespace is **`cdno`**, the OBO Compositional Dietary Nutrition Ontology — a food-composition (analyte) vocabulary grounded in ChEBI, resolvable at `purl.obolibrary.org/obo/CDNO_{id}`, and already carrying cross-references to the systems real data is keyed on. A producer SHOULD give the CDNO analyte term (e.g. `cdno:0200651`, dietary iron) and MAY additionally give an accepted alternate key — `chebi`, `fdc.nutrient` (USDA FDC internal nutrient id, e.g. `1089`), `fdc.nbr` (USDA legacy nutrient number, e.g. `303`), or `infoods` (FAO/INFOODS tagname, e.g. `FE`) — which a consumer resolves to CDNO through CDNO's published `hasDbXref` mappings (a pinned resolution table ships in `resolver/`). An alternate key is not guaranteed to resolve 1:1 — an FDC number may map to several CDNO terms (a specific analyte and a broader dietary total) — so the canonical `cdno:` form is unambiguous and preferred. **Distinguish `fdc.nutrient` from `fdc.nbr`:** FoodData Central carries two nutrient identifier systems (internal id `1089` and legacy number `303` both denote iron), and a bare `fdc:` is ambiguous.
 
 Every prefix MUST be `cdno`/`chebi` or registered in the Bioregistry (`bioregistry.io`); ad-hoc, unregistered prefixes are non-conforming. A component with no term in any accepted registry (e.g. total polyphenols) takes the nearest ChEBI class (e.g. `chebi:26195`, polyphenol), or — only if none applies — an `fdp.local:` identifier carrying an optional `nutrient_ref_status: unregistered`. Because CDNO is revised on a release cadence, a declaration SHOULD record the CDNO release it resolved against (optional `cdno_version`); identifiers are never reassigned, and a superseded term carries `replaced_by`. `nutrient_ref` is **not** a metabolite identifier: mapping a nutrient onto a body metabolite (e.g. via `MASTER_CROSSWALK.tsv`, joined on ChEBI) is a separate downstream layer.
 
@@ -145,7 +145,7 @@ FoodOn · CDNO (Compositional Dietary Nutrition Ontology) · ChEBI · Bioregistr
 
 ## 9. Reference implementation
 
-`github.com/murffious/biology_as_code` — the reference validator, the `MASTER_CROSSWALK.tsv` nutrient→metabolite join (a downstream layer, not the `nutrient_ref` vocabulary), and a worked example declaring full provenance across a single meal evaluated under two host states.
+This repository — the reference `validator/`, the `resolver/` table mapping accepted alternate keys to canonical CDNO terms (pinned to a CDNO release), and a worked `examples/` declaration across a single meal under two host states. `github.com/murffious/biology_as_code` is a fuller reference implementation (a Python package) and hosts the `MASTER_CROSSWALK.tsv` nutrient→metabolite join — a downstream layer, not the `nutrient_ref` vocabulary.
 
 ---
 

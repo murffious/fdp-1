@@ -16,9 +16,10 @@ Compass, or a proprietary score) without modifying it.
 - **Seven fields on a value, five on a score, one rule.** The rule is the
   **weakest-link rule** (§3.1): a score's provenance grade equals its
   lowest-graded input. 40 lab values + 1 label value = Grade C.
-- **`nutrient_ref` names which nutrient** (an INFOODS tagname / FDC nutrient
-  number / CDNO term); **`source_ref` names where** the number came from. A value
-  is readable in isolation.
+- **`nutrient_ref` names which nutrient** — a **CDNO** term (canonical); FDC
+  nutrient numbers, INFOODS tagnames, and ChEBI are accepted as *alternate keys*
+  resolved to CDNO (see [`resolver/`](resolver/)). **`source_ref` names where**
+  the number came from. A value is readable in isolation.
 - **`OPEN` vs `NONE` (§4):** `OPEN` = not known; `NONE` = not applicable / known
   absent. Silence, "not known," and "nothing to know" are three different claims.
 - **Once FDP, always FDP (§5):** a conforming document stays valid under every
