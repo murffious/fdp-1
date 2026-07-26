@@ -31,7 +31,7 @@ Every nutrient value SHALL declare seven fields.
 
 | Field | Type | Notes |
 |---|---|---|
-| `nutrient_ref` | string | Coded nutrient identity in a declared *nutrient* vocabulary: `infoods:FE`, `fdc.nutrient:303`, or a CDNO term. Names *which* nutrient this value is for. |
+| `nutrient_ref` | CURIE | Food-component identity, `prefix:id`. Canonical `cdno` (e.g. `cdno:0200157` = iron); `chebi` / `fdc.nutrient` / `fdc.nbr` / `infoods` also accepted. See below. |
 | `value` | number \| `OPEN` \| `NONE` | See §4 |
 | `unit` | UCUM string | e.g. `mg`, `g`, `kcal` |
 | `source` | enum | `analytical` \| `label` \| `calculated` \| `imputed` \| `literature` \| `OPEN` |
@@ -39,7 +39,9 @@ Every nutrient value SHALL declare seven fields.
 | `method` | string \| `OPEN` \| `NONE` | Analytical method where applicable: `aoac:2011.25`, `aoac:991.43`. `NONE` when the value was not measured (see §4) |
 | `retrieved` | ISO 8601 date | When the value was obtained from `source_ref` |
 
-**`nutrient_ref` names the nutrient; `source_ref` names the source.** They answer different questions — *which* nutrient this is versus *where* the number came from — and a value declaration is unreadable in isolation without the first. `nutrient_ref` resolves to a declared **nutrient** vocabulary: an INFOODS tagname, a USDA FDC nutrient number, or a CDNO (Compositional Dietary Nutrition Ontology) term — the vocabulary of food-composition components. It is deliberately **not** a metabolite identifier. FDP-1 declares the provenance of a *food-composition* value — dietary iron in a food, as reported by USDA — which is a different layer from the same element as a *metabolite in the body*. Mapping a declared nutrient onto a downstream metabolite (e.g. dietary iron → the exchange metabolite `fe2`, via `MASTER_CROSSWALK.tsv`) is a separate join, itself provenance-worthy, and not part of this declaration.
+**`nutrient_ref` names the nutrient; `source_ref` names the source** — *which* nutrient versus *where* the number came from; a value is unreadable in isolation without the first. `nutrient_ref` is a CURIE (`prefix:id`). Its **canonical** namespace is **`cdno`**, the OBO Compositional Dietary Nutrition Ontology — a food-composition (analyte) vocabulary grounded in ChEBI, resolvable at `purl.obolibrary.org/obo/CDNO_{id}`, and already carrying cross-references to the systems real data is keyed on. A producer SHOULD give the CDNO analyte term (e.g. `cdno:0200157`, iron) and MAY additionally give an accepted alternate key — `chebi`, `fdc.nutrient` (USDA FDC internal nutrient id, e.g. `1089`), `fdc.nbr` (USDA legacy nutrient number, e.g. `303`), or `infoods` (FAO/INFOODS tagname, e.g. `FE`) — which a consumer resolves to CDNO through CDNO's published `hasDbXref` mappings. **Distinguish `fdc.nutrient` from `fdc.nbr`:** FoodData Central carries two nutrient identifier systems (internal id `1089` and legacy number `303` both denote iron), and a bare `fdc:` is ambiguous.
+
+Every prefix MUST be `cdno`/`chebi` or registered in the Bioregistry (`bioregistry.io`); ad-hoc, unregistered prefixes are non-conforming. A component with no term in any accepted registry (e.g. total polyphenols) takes the nearest ChEBI class (e.g. `chebi:26195`, polyphenol), or — only if none applies — an `fdp.local:` identifier carrying an optional `nutrient_ref_status: unregistered`. Because CDNO is revised on a release cadence, a declaration SHOULD record the CDNO release it resolved against (optional `cdno_version`); identifiers are never reassigned, and a superseded term carries `replaced_by`. `nutrient_ref` is **not** a metabolite identifier: mapping a nutrient onto a body metabolite (e.g. via `MASTER_CROSSWALK.tsv`, joined on ChEBI) is a separate downstream layer.
 
 **`method` is not optional decoration.** Dietary fibre determined by AOAC 985.29, 991.43, and 2011.25 yields systematically different results for the same food, because the later methods capture resistant starch and low-molecular-weight soluble fibre the earlier ones miss. A fibre value without a method is not comparable to another fibre value.
 
@@ -99,7 +101,7 @@ Two tokens carry the difference between *not knowing* and *knowing there is noth
 
 Omitting a field, declaring it `OPEN`, and declaring it `NONE` are three different statements — silence, a claim about the limit of what is known, and a claim about what does not exist. Consumers of a declaration MUST be able to distinguish them.
 
-A nutrient with no standardized vocabulary term SHALL be given an identifier in a declared local namespace (e.g. `local:polyphenols_total`) rather than `OPEN` or `NONE`, so the value remains referenceable. `local:` records that no standard term was available — not that no nutrient exists.
+A nutrient with no term in an accepted registry SHALL be given the nearest ChEBI class (e.g. `chebi:26195`, polyphenol) or, failing that, an `fdp.local:` identifier (§2) — never `OPEN` or `NONE` — so the value remains referenceable. That records the absence of a standard *term*, not the absence of a nutrient.
 
 Coverage SHOULD be reported as the fraction of fields carrying a determinate (non-`OPEN`) value, per dataset. Honest partial coverage is conforming; invented completeness is not.
 
@@ -137,7 +139,7 @@ This specification does not define healthy food, prescribe nutrients to include 
 
 ## 8. Normative references
 
-FoodOn · INFOODS tagnames · CDNO (Compositional Dietary Nutrition Ontology) · USDA FoodData Central · FooDB · HMDB · ChEBI · KEGG · InChIKey · UCUM · AOAC Official Methods of Analysis · 21 CFR 101.9(g) · Regulation (EU) No 1169/2011
+FoodOn · CDNO (Compositional Dietary Nutrition Ontology) · ChEBI · Bioregistry · INFOODS tagnames · USDA FoodData Central · FooDB · HMDB · KEGG · InChIKey · UCUM · AOAC Official Methods of Analysis · 21 CFR 101.9(g) · Regulation (EU) No 1169/2011
 
 ---
 

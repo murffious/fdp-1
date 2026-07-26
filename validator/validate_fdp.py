@@ -21,6 +21,12 @@ from dataclasses import dataclass, field
 OPEN = "OPEN"   # §4 — not known (exists, could be supplied)
 NONE = "NONE"   # §4 — not applicable / known absent (e.g. method of a non-measured value)
 
+# §2 — accepted nutrient_ref prefixes. `cdno`/`chebi` are OBO PURL-resolvable;
+# the rest are Bioregistry-registrable source registries resolved to CDNO. A
+# fuller check would accept any Bioregistry-registered prefix; offline we allow
+# this named set and reject unrecognized (ad-hoc) prefixes as non-conforming.
+NUTRIENT_PREFIXES = {"cdno", "chebi", "fdc.nutrient", "fdc.nbr", "infoods", "fdp.local"}
+
 # §2 — every nutrient value declares these seven fields. `nutrient_ref` names
 # WHICH nutrient the value is for (resolvable through a crosswalk such as
 # MASTER_CROSSWALK.tsv); `source_ref` names WHERE the number came from.
@@ -99,11 +105,18 @@ def check_value(name: str, decl: dict, rep: Report) -> str | None:
         if f in decl and decl[f] in (None, ""):
             rep.fail(where, f"field '{f}' is empty; unknowns SHALL be the literal \"OPEN\" (§4)")
 
-    # nutrient_ref must resolve to an identifier — a standard vocabulary term or a
-    # declared local: id (§4). It is never OPEN or NONE: a value you cannot name is
-    # not a value you can declare (§2).
-    if decl.get("nutrient_ref") in (OPEN, NONE):
-        rep.fail(where, "nutrient_ref is OPEN/NONE; name the nutrient (use a local: id if no standard term exists) (§2, §4)")
+    # nutrient_ref must be a CURIE that resolves to an identifier — canonical CDNO,
+    # an accepted alternate registry, or a chebi/fdp.local fallback (§2). It is
+    # never OPEN or NONE, and its prefix must be an accepted one.
+    nref = decl.get("nutrient_ref")
+    if nref in (OPEN, NONE):
+        rep.fail(where, "nutrient_ref is OPEN/NONE; name the nutrient — use a chebi class or fdp.local: id if no standard term exists (§2, §4)")
+    elif isinstance(nref, str) and ":" in nref:
+        prefix = nref.split(":", 1)[0]
+        if prefix not in NUTRIENT_PREFIXES:
+            rep.fail(where, f"nutrient_ref prefix '{prefix}' is not accepted; use cdno/chebi or a Bioregistry-registered prefix {sorted(NUTRIENT_PREFIXES)} (§2)")
+    elif isinstance(nref, str):
+        rep.fail(where, "nutrient_ref must be a CURIE of the form 'prefix:id' (§2)")
 
     source = decl.get("source")
     if source is not None and source not in VALUE_SOURCES:
