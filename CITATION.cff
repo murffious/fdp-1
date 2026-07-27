@@ -16,6 +16,7 @@ authors:
 version: "0.1.0"
 date-released: "2026-07-26"
 license: Apache-2.0
+doi: "10.5281/zenodo.21613721"
 repository-code: "https://github.com/murffious/fdp-1"
 keywords:
   - food data provenance
@@ -25,5 +26,10 @@ keywords:
   - nutrition
   - provenance
   - reproducibility
-# doi: added after the first tagged GitHub release archives to Zenodo (the
-# GitHub–Zenodo integration mints the concept DOI on publish; do not pre-fill).
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.21613721"
+    description: "Concept DOI — all versions (resolves to the latest)"
+  - type: doi
+    value: "10.5281/zenodo.21613722"
+    description: "Version DOI — v0.1.0"

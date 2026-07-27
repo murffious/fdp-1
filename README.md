@@ -1,6 +1,7 @@
 # FDP-1 — Food Data Provenance Declaration
 
 [![CI](https://github.com/murffious/fdp-1/actions/workflows/ci.yml/badge.svg)](https://github.com/murffious/fdp-1/actions/workflows/ci.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21613721.svg)](https://doi.org/10.5281/zenodo.21613721)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
 [![Status](https://img.shields.io/badge/status-Draft%20%C2%B7%20RFC-orange)](FDP-1-food-data-provenance.md)
 
