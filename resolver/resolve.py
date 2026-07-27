@@ -2,8 +2,9 @@
 """Resolve an FDP-1 nutrient_ref alternate key to its canonical CDNO term(s).
 
 FDP-1 §2 makes `cdno` canonical and accepts `fdc.nutrient` / `fdc.nbr` /
-`infoods` / `chebi` as alternate keys that a consumer resolves to CDNO. This does
-that lookup offline against cdno-xref.tsv (pinned to a CDNO release).
+`infoods` as alternate keys that a consumer resolves to CDNO. This does that
+lookup offline against cdno-xref.tsv (pinned to a CDNO release). `chebi` is a
+terminal fallback identity, not resolvable to CDNO, so it is not handled here.
 
     python resolve.py infoods:FE        ->  cdno:0200157
     python resolve.py fdc.nutrient:1089 ->  cdno:0200157 cdno:0200651   (ambiguous)
@@ -20,7 +21,7 @@ def load():
     idx = {}
     with open(TABLE, encoding="utf-8") as fh:
         for row in csv.DictReader(fh, delimiter="\t"):
-            for prefix in ("fdc.nutrient", "fdc.nbr", "infoods", "chebi"):
+            for prefix in ("fdc.nutrient", "fdc.nbr", "infoods"):
                 for v in row[prefix].split(";"):
                     if v and v != "OPEN":
                         idx.setdefault((prefix, v), set()).add(row["cdno_id"])

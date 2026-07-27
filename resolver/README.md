@@ -1,18 +1,20 @@
 # FDP-1 `nutrient_ref` resolver
 
 FDP-1 §2 makes **`cdno`** the canonical `nutrient_ref` namespace and accepts
-`fdc.nutrient` / `fdc.nbr` / `infoods` / `chebi` as **alternate keys a consumer
-resolves to CDNO**. This directory is the offline resolution layer — spec
-infrastructure, small and pinned, distinct from the metabolite crosswalk in the
-reference implementation.
+`fdc.nutrient` / `fdc.nbr` / `infoods` as **alternate keys a consumer resolves to
+CDNO**. This directory is the offline resolution layer — spec infrastructure,
+small and pinned, distinct from the metabolite crosswalk in the reference
+implementation. (`chebi` is not resolved here: per §2 it is a *terminal* fallback
+identity used when no CDNO term exists, not an alternate key.)
 
 ## Files
 
 - **`cdno-xref.tsv`** — the resolution table (364 rows), columns
-  `cdno_id | fdc.nutrient | fdc.nbr | infoods | chebi`. Missing values are the
-  literal `OPEN` (FDP-1 §4), so every row is self-validating and no cell is
-  silent. Derived from CDNO release **`2026-06-10`** — pin declarations to the
-  same `cdno_version`.
+  `cdno_id | fdc.nutrient | fdc.nbr | infoods`. Missing values are the literal
+  `OPEN` (FDP-1 §4), so every row is self-validating and no cell is silent.
+  Derived from CDNO release **`2026-06-10`**, verified against the live PURL
+  (both `cdno.obo` `data-version` and `cdno.owl` `versionIRI`) on 2026-07-26 —
+  pin declarations to the same `cdno_version`.
 - **`build_cdno_xref.py`** — regenerates the table from CDNO's own `xref:`
   annotations: `python build_cdno_xref.py cdno.obo cdno-xref.tsv`
   (download `cdno.obo` from `http://purl.obolibrary.org/obo/cdno.obo`).

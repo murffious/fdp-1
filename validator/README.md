@@ -23,7 +23,7 @@ drops straight into CI or a pre-commit hook.
 1. **Seven fields on every value** (§2) — `nutrient_ref`, `value`, `unit`,
    `source`, `source_ref`, `method`, `retrieved`. `nutrient_ref` names *which*
    nutrient the value is for (a CURIE with an accepted prefix — canonical `cdno`,
-   also `chebi` / `fdc.nutrient` / `fdc.nbr` / `infoods` / `fdp.local`; ad-hoc
+   also `chebi` / `fdc.nutrient` / `fdc.nbr` / `infoods` / `foodprov`; ad-hoc
    prefixes are rejected); `source_ref` names *where* it came from.
 2. **Five fields on every score** (§3) — `score_id`, `inputs`,
    `provenance_grade`, `weights_published`, `validation`.

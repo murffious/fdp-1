@@ -2,10 +2,11 @@
 """Extract the FDP-1 nutrient_ref resolver table from the CDNO ontology.
 
 FDP-1 §2 makes `cdno` the canonical nutrient_ref namespace and accepts
-`fdc.nutrient` / `fdc.nbr` / `infoods` / `chebi` as alternate keys that a
-consumer MUST resolve to a CDNO term. CDNO publishes those mappings as
-`xref:` annotations in its OBO release; this script extracts them into a small
-TSV so the resolution can be done offline, pinned to a CDNO release.
+`fdc.nutrient` / `fdc.nbr` / `infoods` as alternate keys that a consumer resolves
+to CDNO. CDNO publishes those mappings as `xref:` annotations in its OBO release;
+this extracts them into a small TSV so resolution can be done offline, pinned to
+a CDNO release. (`chebi` is NOT a column: it is a terminal fallback identity when
+no CDNO term exists, per §2, not an alternate key that resolves to CDNO.)
 
 Usage:
     python build_cdno_xref.py cdno.obo cdno-xref.tsv
@@ -28,15 +29,12 @@ for block in obo.split("\n[Term]"):
     fdc = [x.split(":", 1)[1] for x in xrefs if x.startswith("USDA_fdc_id:")]
     nbr = [x.split(":", 1)[1] for x in xrefs if x.startswith("USDA_nutrient_nbr:")]
     inf = [x.split(":", 1)[1] for x in xrefs if x.startswith("INFOODs:")]
-    che = [x.split(":", 1)[1] for x in xrefs if x.upper().startswith("CHEBI:")]
-    che += [x.split(":", 1)[1] for x in re.findall(r"^is_a:\s*(CHEBI:\d+)", block, re.M)]
     if not (fdc or nbr or inf):
         continue  # only rows that resolve an accepted alternate key
-    rows.append((m.group(1).lower(), cell(fdc), cell(nbr), cell(inf),
-                 cell(che)))
+    rows.append((m.group(1).lower(), cell(fdc), cell(nbr), cell(inf)))
 rows.sort()
 with open(sys.argv[2], "w", encoding="utf-8") as fh:
-    fh.write("cdno_id\tfdc.nutrient\tfdc.nbr\tinfoods\tchebi\n")
+    fh.write("cdno_id\tfdc.nutrient\tfdc.nbr\tinfoods\n")
     for r in rows:
         fh.write("\t".join(r) + "\n")
 print(f"cdno_version={version}  rows={len(rows)}")

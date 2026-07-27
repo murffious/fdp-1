@@ -25,7 +25,7 @@ NONE = "NONE"   # §4 — not applicable / known absent (e.g. method of a non-me
 # the rest are Bioregistry-registrable source registries resolved to CDNO. A
 # fuller check would accept any Bioregistry-registered prefix; offline we allow
 # this named set and reject unrecognized (ad-hoc) prefixes as non-conforming.
-NUTRIENT_PREFIXES = {"cdno", "chebi", "fdc.nutrient", "fdc.nbr", "infoods", "fdp.local"}
+NUTRIENT_PREFIXES = {"cdno", "chebi", "fdc.nutrient", "fdc.nbr", "infoods", "foodprov"}
 
 # §2 — every nutrient value declares these seven fields. `nutrient_ref` names
 # WHICH nutrient the value is for (resolvable through a crosswalk such as
@@ -106,11 +106,11 @@ def check_value(name: str, decl: dict, rep: Report) -> str | None:
             rep.fail(where, f"field '{f}' is empty; unknowns SHALL be the literal \"OPEN\" (§4)")
 
     # nutrient_ref must be a CURIE that resolves to an identifier — canonical CDNO,
-    # an accepted alternate registry, or a chebi/fdp.local fallback (§2). It is
+    # an accepted alternate registry, or a chebi/foodprov fallback (§2). It is
     # never OPEN or NONE, and its prefix must be an accepted one.
     nref = decl.get("nutrient_ref")
     if nref in (OPEN, NONE):
-        rep.fail(where, "nutrient_ref is OPEN/NONE; name the nutrient — use a chebi class or fdp.local: id if no standard term exists (§2, §4)")
+        rep.fail(where, "nutrient_ref is OPEN/NONE; name the nutrient — use a chebi class or foodprov: id if no standard term exists (§2, §4)")
     elif isinstance(nref, str) and ":" in nref:
         prefix = nref.split(":", 1)[0]
         if prefix not in NUTRIENT_PREFIXES:
