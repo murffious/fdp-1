@@ -1,0 +1,15 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate the worked example (must CONFORM, exit 0)
+        run: python validator/validate_fdp.py examples/iron-two-hosts.json
+      - name: Resolver smoke test
+        run: test "$(python resolver/resolve.py infoods:FE)" = "cdno:0200157"
