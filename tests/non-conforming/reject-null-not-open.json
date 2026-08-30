@@ -1,0 +1,16 @@
+{
+  "fdp": "1.0",
+  "_why_this_file_exists": "FDP-1 §4: an unknown is the literal string \"OPEN\". Not null, not \"\", not omitted, not 0. The distinction is the whole point — OPEN means 'exists, could be supplied', NONE means 'not applicable', and null means the record cannot tell you which. A validator that accepts null has silently merged two different states.",
+  "values": {
+    "iron": {
+      "nutrient_ref": "cdno:0000106",
+      "value": 2.7,
+      "unit": "mg",
+      "source": "analytical",
+      "source_ref": "USDA-FDC-169967",
+      "method": "",
+      "retrieved": "2026-08-29"
+    }
+  },
+  "scores": []
+}

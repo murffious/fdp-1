@@ -1,0 +1,14 @@
+{
+  "fdp": "1.0",
+  "_why_this_file_exists": "A value written as a bare `protein_mg` column instead of nutrient_ref + amount + unit. This is the single most common way a food table loses its meaning: the nutrient identity and the unit are welded into a column NAME, where nothing can resolve them and no two tables agree. FDP-1 §2 requires seven fields on every value; this declaration supplies none of the three that matter. It MUST be rejected.",
+  "values": {
+    "protein": {
+      "protein_mg": 12000,
+      "source": "label",
+      "source_ref": "pkg-2026-08",
+      "method": "NONE",
+      "retrieved": "2026-08-29"
+    }
+  },
+  "scores": []
+}

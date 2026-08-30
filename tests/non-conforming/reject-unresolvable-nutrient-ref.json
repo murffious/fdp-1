@@ -1,0 +1,16 @@
+{
+  "fdp": "1.0",
+  "_why_this_file_exists": "FDP-1 §2: nutrient_ref must be a CURIE with an accepted prefix. A bare English noun resolves to nothing, joins to nothing, and is how 'iron' in a food table stops matching 'iron' in a lab result. This is the read-side identity failure the spec exists to prevent.",
+  "values": {
+    "iron": {
+      "nutrient_ref": "iron",
+      "value": 2.7,
+      "unit": "mg",
+      "source": "analytical",
+      "source_ref": "USDA-FDC-169967",
+      "method": "AOAC 999.10",
+      "retrieved": "2026-08-29"
+    }
+  },
+  "scores": []
+}

@@ -9,7 +9,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      # Rule E runs FIRST. Every other failure here is recoverable; a person's
+      # identifier in a public git history is not.
+      - name: No human rows (study rule, not FDP-1 conformance)
+        run: python tools/check_no_human_rows.py
+      - name: The guard fires on use and stays silent on mention
+        run: python tests/test_no_human_rows.py
       - name: Validate the worked example (must CONFORM, exit 0)
         run: python validator/validate_fdp.py examples/iron-two-hosts.json
+      # Proving the validator says yes is half a test. This proves it can say no.
+      - name: Non-conforming declarations must be REJECTED
+        run: python tests/test_rejections.py
       - name: Resolver smoke test
         run: test "$(python resolver/resolve.py infoods:FE)" = "cdno:0200157"
