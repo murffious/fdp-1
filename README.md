@@ -54,6 +54,23 @@ exits non-zero on any non-conformance. See
 provenance on every input, a ~6× absorbed-iron delta across two host states,
 honestly ungraded (`—`) because one modifier is `OPEN`.
 
+## Watch it refuse
+
+Proving a validator says *yes* is half a test. Clone this repository and watch it
+say **no** — three fixtures under `tests/non-conforming/` (a welded `protein_mg`
+column, an empty field where §4 requires the literal `OPEN`, and a bare `"iron"`
+where §2 requires a CURIE) are each rejected, and the conforming example is checked
+in the same run so a validator that broke and refused everything could not pass:
+
+```bash
+git clone https://github.com/murffious/fdp-1 && cd fdp-1
+pytest tests/                     # or: python tests/test_rejections.py
+```
+
+Both invocations run the same assertions. That matters more than it sounds: until
+2026-08-30 only the script form existed, so `pytest tests/` in a fresh clone printed
+*no tests collected* — the suite looked like pytest and was not.
+
 ## Reference implementation
 
 A fuller reference implementation — a Python package that ingests foods, runs

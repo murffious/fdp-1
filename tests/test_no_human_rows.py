@@ -71,5 +71,15 @@ def main() -> int:
     return 0
 
 
+# pytest entry point. CI runs this file as a script, which is why it never noticed:
+# in a fresh clone, `pytest tests/` printed "no tests collected". Every function here
+# was named main()/run(), so a suite that LOOKS like pytest collected nothing, and the
+# one thing a stranger is invited to do — clone it and watch a bad row get refused —
+# silently did nothing at all. Both invocations have to work, because only one of them
+# is the one a stranger will try.
+def test_no_human_rows() -> None:
+    assert main() == 0
+
+
 if __name__ == "__main__":
     raise SystemExit(main())
